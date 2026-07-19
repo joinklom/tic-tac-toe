@@ -7,7 +7,7 @@ const container = document.querySelector("#container");
 
 const gameboard = {};
 const players = {
-    playerTurn : 2,
+    playerTurn : 1,
 };
 
 //IIFE function for gameboard that makes the grid and assign to the gameboard object his squares keys
@@ -25,18 +25,21 @@ const players = {
 })()
 
 
-//Functionality of squares, gameboard squares are going to function like buttons
+//Functionality of squares
 const squaresArray = document.querySelectorAll(".square");
 for (let square of squaresArray){
+    square.addEventListener("click", () =>{
+        writeSquare(square)
+    })
+}
+
+
+function writeSquare(square){
     if (players.playerTurn === 1){
-        square.addEventListener("click", () =>{
-            square.textContent = "X";    
-        })
+        square.textContent = "X";
+        return players.playerTurn = 2;
+    } else {
+        square.textContent = "O";
+        return players.playerTurn = 1;
     }
-    else {
-        square.addEventListener("click", () =>{
-            square.textContent = "O";    
-        })
-    }
-    
 }
