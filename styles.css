@@ -1,0 +1,10 @@
+#container {
+    display: inline-grid;
+    grid-template: repeat(3, 200px) / repeat(3, 200px);
+    border: 5px solid white;
+}
+
+.square{
+    border: 1px solid black;
+}
+
