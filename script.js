@@ -33,8 +33,10 @@ for (let square of squaresArray){
     })
 }
 
-
 function writeSquare(square){
+    if (square.textContent != ""){
+        return;
+    }
     if (players.playerTurn === 1){
         square.textContent = "X";
         return players.playerTurn = 2;
@@ -43,3 +45,4 @@ function writeSquare(square){
         return players.playerTurn = 1;
     }
 }
+
