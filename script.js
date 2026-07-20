@@ -14,8 +14,8 @@ function player(name, letter, turn, combo, score){
         score: score
     };
 }
-const playerOne = player("Player One","X",1,[],0);
-const playerTwo = player("Player Two","O",2,[],0);
+const playerOne = player("playerOne","X",1,[],0);
+const playerTwo = player("playerTwo","O",2,[],0);
 
 console.log(playerOne)
 // An object with All valid combinations of equally written squares necessary for winning a game 
@@ -58,28 +58,35 @@ function writeSquare(square){
     }
     if (turn === 1){
         square.textContent = playerOne.letter;
-        return turn = 2;
+        turn = 2;
     } else {
         square.textContent = playerTwo.letter;
-        return turn = 1;
+        turn = 1;
+        return lastPlayerTurn = playerTwo.name;
     }
 }
 
-// Dunno how to use this actually
-function checkVictory(sq1, sq2, sq3) {
-    if (sq1 === sq2 && sq1 === sq3 && sq1 != '') {
-        victory = true;
-        return;
+// This below compares the combo score of the players object with the arrays inside the victory conditions object
+function checkVictory(player) {
+    for (let key of Object.keys(victoryConditions)) {
+        if (player.combo.includes(`square${victoryConditions[key][0]}`) &&
+            player.combo.includes(`square${victoryConditions[key][1]}`) &&
+            player.combo.includes(`square${victoryConditions[key][2]}`)) {
+            victory = true;
+            winner = player;
+            console.log(winner.name);
+            return;
+        }
     } 
 }
 
 
-function endGame() {
+function endGame(winner) {
     if (victory === true) {
         const children = document.querySelectorAll(".square")
         for (let i=0; i<children.length; i++) {
             children[i].style = "display: none";
-            container.textContent = `${playerOne.name} has Won!`;
+            container.textContent = `${winner.name} has Won!`;
             container.style = "background-color: rgb(5, 248, 17); font-size: 100px; text-align: center";
         }
     }
@@ -94,22 +101,25 @@ function checkState(letter) {
         if (gameboard[key] === letter){   
             console.log(`${key} is ${letter}`)
             if (letter === playerOne.letter) {
-                if (playerOne.combo.includes(key) || playerTwo.combo.includes(key)) {
-                    return;
+                if (playerOne.combo.includes(key)) {
+                    return lastPlayerTurn = playerOne.name;
                 } playerOne.combo.push(key);
             } else {
                 if (playerTwo.combo.includes(key)) {
-                    return;
+                    return lastPlayerTurn = playerTwo.name;
                 } playerTwo.combo.push(key);                
             }
+            console.log(playerOne)
+            console.log(playerTwo)
         }
     })
-    //JUST FOR CHECKING IF THE FUNCTION LOGIC WORKS, IT WORKS BUT I MUST WIRE DIFFERENTLY ALL THE LOGIC
-    checkVictory(gameboard.square1, gameboard.square2, gameboard.square3); 
+     
 } 
 
 
 //Game
+let lastPlayerTurn = ""
+let winner = "" 
 let victory = false;
 function game (){
     const squaresArray = document.querySelectorAll(".square");
@@ -119,7 +129,9 @@ function game (){
             // This below compiles the gameboard array correctly
             gameboard[square.id] = square.textContent;
             checkState(square.textContent);
-            endGame();
+            checkVictory(playerOne);
+            checkVictory(playerTwo);
+            endGame(winner);
         })
     }
 }
