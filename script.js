@@ -1,33 +1,23 @@
 
-
-//DOM gameboard
 const body = document.querySelector("body");
 const container = document.querySelector("#container");
 
-
 const gameboard = {};
-const players = {
-    playerOne : "X",
-    playerTwo : "O",
-    playerTurn : 1,
-};
 let turn = 1
-
-/*
-// FACTORY FUNCTION PER CREARE OGGETTI, MA NON SO A CHE DOVREBBE SERVIRMI?
-function player(letter, turn, score){
+// We create the two players with a factory function
+function player(name, letter, turn, combo, score){
     return {
+        name : name,
         letter: letter,
         turn: turn,
+        combo: [],
         score: score
     };
 }
+const playerOne = player("Player One","X",1,[],0);
+const playerTwo = player("Player Two","O",2,[],0);
 
-let playerOne = player("X",1,0);
-console.log(playerTwo);
-
-*/
-console.log(players.playerOne);
+console.log(playerOne)
 // An object with All valid combinations of equally written squares necessary for winning a game 
 const victoryConditions = {
     vic1 : [1,5,9],
@@ -51,54 +41,92 @@ console.table(victoryConditions);
         gameboardDiv.className = "square";
         container.append(gameboardDiv);
     }
-    console.log(gameboard);
+    console.table(gameboard);
     return gameboard;
 })()
 
 
-//Functionality of squares
-const squaresArray = document.querySelectorAll(".square");
-for (let square of squaresArray){
-    square.addEventListener("click", () =>{
-        writeSquare(square)
-        gameboard[square.id] = square.textContent;
-        console.log(gameboard);
-        checkWin(square.textContent);
-    })
-}
+
+
+
+
+////////////////// *******************************************************
 
 function writeSquare(square){
     if (square.textContent != ""){
         return;
     }
-    if (players.playerTurn === 1){
-        square.textContent = "X";
-        return players.playerTurn = 2;
+    if (turn === 1){
+        square.textContent = playerOne.letter;
+        return turn = 2;
     } else {
-        square.textContent = "O";
-        return players.playerTurn = 1;
+        square.textContent = playerTwo.letter;
+        return turn = 1;
     }
 }
 
-//This checks for what is the last letter that has been wrote, and then look for the victoryConditions 
-function checkWin(letter) {
-    Object.keys(gameboard).forEach(key => {
-        if (gameboard[key] === letter){   
-            console.log(`is ${letter}`)
-        }
-    })
-} 
-
-
 // Dunno how to use this actually
-let victory = false;
-function Victory(sq1, sq2, sq3) {
-    if (sq1 === sq2 && sq1 === sq3) {
+function checkVictory(sq1, sq2, sq3) {
+    if (sq1 === sq2 && sq1 === sq3 && sq1 != '') {
         victory = true;
         return;
     } 
 }
 
+
+function endGame() {
+    if (victory === true) {
+        const children = document.querySelectorAll(".square")
+        for (let i=0; i<children.length; i++) {
+            children[i].style = "display: none";
+            container.textContent = `${playerOne.name} has Won!`;
+            container.style = "background-color: rgb(5, 248, 17); font-size: 100px; text-align: center";
+        }
+    }
+}
+
+//This checks for what is the last letter that has been wrote,
+// and pushes to an array in the respective player combo array the squareNumber that has been wrote by
+// that player; 
+// and then look for the victoryConditions 
+function checkState(letter) {
+    Object.keys(gameboard).forEach(key => {
+        if (gameboard[key] === letter){   
+            console.log(`${key} is ${letter}`)
+            if (letter === playerOne.letter) {
+                if (playerOne.combo.includes(key) || playerTwo.combo.includes(key)) {
+                    return;
+                } playerOne.combo.push(key);
+            } else {
+                if (playerTwo.combo.includes(key)) {
+                    return;
+                } playerTwo.combo.push(key);                
+            }
+        }
+    })
+    //JUST FOR CHECKING IF THE FUNCTION LOGIC WORKS, IT WORKS BUT I MUST WIRE DIFFERENTLY ALL THE LOGIC
+    checkVictory(gameboard.square1, gameboard.square2, gameboard.square3); 
+} 
+
+
+//Game
+let victory = false;
+function game (){
+    const squaresArray = document.querySelectorAll(".square");
+    for (let square of squaresArray){
+        square.addEventListener("click", () =>{
+            writeSquare(square)
+            // This below compiles the gameboard array correctly
+            gameboard[square.id] = square.textContent;
+            checkState(square.textContent);
+            endGame();
+        })
+    }
+}
+
+
+
+game();
 
 
 
