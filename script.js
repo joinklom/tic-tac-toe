@@ -150,7 +150,7 @@ function game (){
         })
     }
 }
-
+//not used function
 function flicker(element){
     function flickerOff () { 
         element.style.visibility = "hidden";
