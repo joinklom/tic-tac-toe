@@ -1,6 +1,9 @@
 
 const body = document.querySelector("body");
 const container = document.querySelector("#container");
+const header = document.querySelector("#header");
+const content = document.querySelector("#content")
+const tail = document.querySelector("#tail")
 
 const gameboard = {};
 let turn = 1
@@ -30,7 +33,7 @@ const victoryConditions = {
 };
 
 //IIFE function for gameboard that makes the grid and assign to the gameboard object his squares keys
-(function Gameboard(){
+function Gameboard(){
     for (let i=1; i<10; i++){
         let squareElement = "square"+i;
         gameboard[squareElement] = "";
@@ -41,7 +44,7 @@ const victoryConditions = {
     }
     console.table(gameboard);
     return gameboard;
-})()
+}
 
 
 
@@ -76,7 +79,7 @@ function checkVictory(player) {
 }
 
 
-function showButtons() {
+function showEndButtons() {
     const buttons = document.querySelectorAll("button");
     for (let i=0; i<buttons.length; i++) {
         if (victory === true) {
@@ -84,24 +87,6 @@ function showButtons() {
         } 
     } 
 }
-
-// This below cancels the gameboard if a winner is declared, and writes 
-// the name of the winner in the sidebar
-// it also adds the point to the correct player who signed score.
-function endGame(winner) {
-    if (victory === true) {
-        const children = document.querySelectorAll(".square");
-        const sidebar = document.querySelector("#sidebar");
-        for (let i=0; i<children.length; i++) {
-            children[i].style = "display: none";
-        } 
-        showButtons()
-        winner.score ++;
-        sidebar.innerHTML += (`<br><br><br>${winner.name} has Won!<br> 
-            ${winner.name} is at ${winner.score}!`);
-    }
-}
-
 //This checks for what is the last letter that has been wrote,
 // and pushes to an array in the respective player combo array the squareNumber that has been wrote by
 // that player; 
@@ -123,15 +108,36 @@ function checkState(letter) {
             console.log(playerTwo)
         }
     })
-     
 } 
 
+// This below cancels the gameboard if a winner is declared, and writes 
+// the name of the winner in the sidebar
+// it also adds the point to the correct player who signed score.
+// and calls the function that makes the content word going on and off 
+function endGame(winner) {
+    if (victory === true) {
+        const children = document.querySelectorAll(".square");
+        const sidebar = document.querySelector("#sidebar");
+        for (let i=0; i<children.length; i++) {
+            children[i].style = "display: none";
+        } 
+        showEndButtons()
+        winner.score ++;
+        content.innerHTML = `${playerOne.name} is at ${playerOne.score} victories<br><br><br>
+            ${playerTwo.name} is at ${playerTwo.score} victories`;
+
+        flicker(content);
+        showWinner(winner);
+    }
+}
 
 //Game
 let lastPlayerTurn = ""
 let winner = "" 
 let victory = false;
 function game (){
+    Gameboard();
+    reset();
     const squaresArray = document.querySelectorAll(".square");
     for (let square of squaresArray){
         square.addEventListener("click", () =>{
@@ -146,9 +152,40 @@ function game (){
     }
 }
 
+function flicker(element){
+    function flickerOff () { 
+        element.style.display = "none";
+    }
+
+    function flickerOn () { 
+        element.style.display = "block";          
+    }
+    setInterval(flickerOff, 500)
+    setInterval(flickerOn, 1000)
+}
+// We resets the gameboard Object values, 
+// we reset the text content of the squares dom elements
+// we resets the player Objects combo
+function reset () {
+    for (let i=1; i<10; i++) {
+        let index = `square`+i;
+        gameboard[index] = "";
+    } 
+    const squares =  document.querySelectorAll(".square")
+    for (let square of squares) {
+        square.textContent = "";
+    }
+    playerOne.combo = []
+    playerTwo.combo = []
+}
+
+function showWinner (winner) { 
+    tail.innerHTML += (`${winner.name} scored a point!`) 
+    content.innerHTML = (`${winner.name} is at ${winner.score} point!`);
+}
+
+
 
 
 game();
-
-
 
