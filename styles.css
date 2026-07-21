@@ -22,13 +22,14 @@ body {
 }
 
 #content {
-    padding: 30px;
     margin-top: auto;
+    text-align: center;
+}
+input {
+    margin-bottom: auto;
 }
 
 #tail {
-    border: 1px solid;
-    border-radius: 10px;
     padding: 30px;
     margin-top: auto;
     font-size: medium;
@@ -40,11 +41,18 @@ body {
     order: 4;
     padding: 30px;
 }
+#playerOne {
+    background-color: black;
+    padding: 20px;
+    color: rgb(5, 248, 17);
+    font-size: 20px;
+    text-align: center;
+}
 
 
 
 button {
-    display: none;
+    visibility : hidden;
     background-color: black;
     color: rgb(5, 248, 17);
     border: 1px solid rgb(5, 248, 17);
@@ -55,6 +63,16 @@ button {
     text-align:center;
 }
 
+#inputSubmit {
+    visibility : visible;
+    border: 1px solid;
+    padding: 10px;
+    margin-top: 20px;
+    margin-left: 200px;
+    width: fit-content;
+    color: rgb(5, 248, 17);
+}
+
 #container {
     margin-right: auto; 
     display: grid;
@@ -62,6 +80,7 @@ button {
     color: rgb(5, 248, 17);
     border-radius: 10px;
 }
+
 
 .square{
     border: 1px solid rgb(5, 248, 17);
