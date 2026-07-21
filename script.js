@@ -14,10 +14,9 @@ function player(name, letter, turn, combo, score){
         score: score
     };
 }
-const playerOne = player("playerOne","X",1,[],0);
-const playerTwo = player("playerTwo","O",2,[],0);
+const playerOne = player("name1","X",1,[],0);
+const playerTwo = player("name2","O",2,[],0);
 
-console.log(playerOne)
 // An object with All valid combinations of equally written squares necessary for winning a game 
 const victoryConditions = {
     vic1 : [1,5,9],
@@ -29,7 +28,6 @@ const victoryConditions = {
     vic7 : [4,5,6],
     vic8 : [7,8,9]
 };
-console.table(victoryConditions);  
 
 //IIFE function for gameboard that makes the grid and assign to the gameboard object his squares keys
 (function Gameboard(){
@@ -44,9 +42,6 @@ console.table(victoryConditions);
     console.table(gameboard);
     return gameboard;
 })()
-
-
-
 
 
 
@@ -81,14 +76,29 @@ function checkVictory(player) {
 }
 
 
+function showButtons() {
+    const buttons = document.querySelectorAll("button");
+    for (let i=0; i<buttons.length; i++) {
+        if (victory === true) {
+            buttons[i].style.display = "block";
+        } 
+    } 
+}
+
+// This below cancels the gameboard if a winner is declared, and writes 
+// the name of the winner in the sidebar
+// it also adds the point to the correct player who signed score.
 function endGame(winner) {
     if (victory === true) {
-        const children = document.querySelectorAll(".square")
+        const children = document.querySelectorAll(".square");
+        const sidebar = document.querySelector("#sidebar");
         for (let i=0; i<children.length; i++) {
             children[i].style = "display: none";
-            container.textContent = `${winner.name} has Won!`;
-            container.style = "background-color: rgb(5, 248, 17); font-size: 100px; text-align: center";
-        }
+        } 
+        showButtons()
+        winner.score ++;
+        sidebar.innerHTML += (`<br><br><br>${winner.name} has Won!<br> 
+            ${winner.name} is at ${winner.score}!`);
     }
 }
 
