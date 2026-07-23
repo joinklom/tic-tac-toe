@@ -95,7 +95,9 @@ function showEndButtons() {
     for (let i=0; i<buttons.length; i++) {
         if (victory === true) {
             buttons[i].style.visibility = "visible";
-        } 
+        } else {
+            buttons[i].style.visibility = "hidden"
+        }
     } 
 }
 //This checks for what is the last letter that has been wrote,
@@ -187,10 +189,12 @@ function reset () {
     victory = false;
     winner = "";
     turn = 1;
+    showEndButtons();
 }
 
 function showWinner (winner) { 
     content.innerHTML = (`${winner.name} scored a point!`) 
+    flicker(content);
     tail.innerHTML = (`${playerOne.name} is at ${playerOne.score} point<br><br><br>
         ${playerTwo.name} is at ${playerTwo.score} points`);
 }
